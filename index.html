@@ -193,8 +193,7 @@
               </div>
             </div>
           </div>
-          </div>
-        <div class="certificates-drive-link" style="text-align:center; margin: 2rem 0;">
+           <div class="certificates-drive-link" style="text-align:center; margin: 2rem 0;">
         <p style="font-size:1.1rem; color:var(--primary-color, #00f2ff); margin-bottom:0.5rem;">
           Want to see all my certificates at once?
         </p>
@@ -205,6 +204,8 @@
           View All Certificates on Google Drive
         </a>
       </div>
+          </div>
+       
       </section>
 
      
@@ -331,44 +332,62 @@
           </div>
         </div>
       </section>
-
-        <section id="contact" class="section">
-        <div class="container">
-            <h2 class="section-title">Get In Touch</h2>
-            <div class="contact-container">
-                <div class="contact-info">
-                    <h3>Contact Information</h3>
-                    <div class="info-item">
-                        <i class="fas fa-envelope"></i>
-                        <p>abhiramsalva@gmail.com</p>
-                    </div>
-                    <div class="info-item">
-                        <i class="fas fa-phone"></i>
-                        <p>+91 8951828425</p>
-                    </div>
-                    <div class="info-item">
-                        <i class="fas fa-map-marker-alt"></i>
-                        <p>Bangalore, India</p>
-                    </div>
-                </div>
-                <form class="contact-form">
-                    <div class="form-group">
-                        <input type="text" placeholder="Your Name" required>
-                    </div>
-                    <div class="form-group">
-                        <input type="email" placeholder="Your Email" required>
-                    </div>
-                    <div class="form-group">
-                        <input type="text" placeholder="Subject">
-                    </div>
-                    <div class="form-group">
-                        <textarea placeholder="Your Message" rows="5" required></textarea>
-                    </div>
-                    <button type="submit" class="btn">Send Message</button>
-                </form>
-            </div>
+<!-- ===== CONTACT SECTION ===== -->
+<section id="contact" class="section">
+  <div class="container">
+    <h2 class="section-title">Get In Touch</h2>
+    <div class="contact-container">
+      <!-- Your existing contact info -->
+      <div class="contact-info">
+        <h3>Contact Information</h3>
+        <div class="info-item">
+          <i class="fas fa-envelope"></i>
+          <p>abhiramsalva@gmail.com</p>
         </div>
-    </section>
+        <div class="info-item">
+          <i class="fas fa-phone"></i>
+          <p>+91 8951828425</p>
+        </div>
+        <div class="info-item">
+          <i class="fas fa-map-marker-alt"></i>
+          <p>Bangalore, India</p>
+        </div>
+      </div>
+
+      <!-- New Working Form -->
+      <form 
+        action="https://formsubmit.co/abhiramsalva@gmail.com" 
+        method="POST" 
+        class="contact-form"
+        id="contactForm"
+      >
+        <!-- FormSubmit Config -->
+        <input type="hidden" name="_captcha" value="false">
+        <input type="hidden" name="_next" value="https://yourportfolio.com/thanks.html">
+        <input type="text" name="_honey" style="display:none">
+
+        <!-- Form Fields -->
+        <div class="form-group">
+          <input type="text" name="name" placeholder="Your Name" required>
+        </div>
+        <div class="form-group">
+          <input type="email" name="email" placeholder="Your Email" required>
+        </div>
+        <div class="form-group">
+          <input type="text" name="subject" placeholder="Subject">
+        </div>
+        <div class="form-group">
+          <textarea name="message" placeholder="Your Message" rows="5" required></textarea>
+        </div>
+        <button type="submit" class="btn" id="formSubmitBtn">
+          <span id="submitText">Send Message</span>
+          <div class="submit-spinner hidden"></div>
+        </button>
+        <p id="formMessage" class="form-message hidden"></p>
+      </form>
+    </div>
+  </div>
+</section>
 
     <footer>
         <div class="footer-social-links">
@@ -391,18 +410,7 @@
         <p>&copy; 2023 Salva Abilash. All rights reserved.</p>
     </footer>
 
-    <!-- Screenshot Modal for Tic Tac Toe -->
-<div id="ttt-modal" class="modal">
-  <span class="close" id="ttt-close">&times;</span>
-  <div class="modal-content">
-    <img class="modal-img" id="ttt-modal-img" src="" alt="Tic Tac Toe Screenshot" />
-    <div class="modal-caption"></div>
-  </div>
-  <div class="modal-controls">
-    <button id="ttt-prev" class="modal-arrow">&#10094;</button>
-    <button id="ttt-next" class="modal-arrow">&#10095;</button>
-  </div>
-</div>
+  
 
     <script src="index.js"></script>
   </body>
