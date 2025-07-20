@@ -1151,3 +1151,36 @@ textarea:focus:invalid {
 .modal-controls button:hover {
   background: rgba(0, 0, 0, 0.8);
 }
+
+/* Form Styles */
+.submit-spinner {
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top: 2px solid #fff;
+  width: 20px;
+  height: 20px;
+  animation: spin 1s linear infinite;
+  margin-left: 10px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.submit-spinner.hidden {
+  display: none;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.form-message {
+  margin-top: 15px;
+  padding: 10px;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.form-message.hidden {
+  display: none;
+}
