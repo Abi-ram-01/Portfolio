@@ -7,7 +7,6 @@ document.addEventListener('DOMContentLoaded', function() {
     burger.addEventListener('click', () => {
         navLinks.classList.toggle('active');
         burger.classList.toggle('toggle');
-        // Animate burger lines
         document.querySelectorAll('.burger div').forEach(line => {
             line.classList.toggle('transform');
         });
@@ -50,7 +49,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 ? 'Hide Certifications <i class="fas fa-chevron-up"></i>' 
                 : 'Explore Certifications <i class="fas fa-chevron-down"></i>';
             
-            // Animate cards sequentially
             document.querySelectorAll('.certification-card').forEach((card, i) => {
                 setTimeout(() => card.classList.toggle('show', isShowing), i * 150);
             });
@@ -84,76 +82,88 @@ document.addEventListener('DOMContentLoaded', function() {
         elements.forEach(element => observer.observe(element));
     };
 
-    // Animate project cards
     animateOnScroll(document.querySelectorAll('.project-card'), 'animate');
-    
-    // Animate skill items
     animateOnScroll(document.querySelectorAll('.skill-item'), 'animate');
 
-    // ===== FORM HANDLING =====
-    const contactForm = document.querySelector('.contact-form');
+    // ===== IMPROVED FORM HANDLING =====
+    const contactForm = document.getElementById('contactForm');
     if (contactForm) {
-        contactForm.addEventListener('submit', function(e) {
+        contactForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             
+            const submitBtn = document.getElementById('formSubmitBtn');
+            const submitText = document.getElementById('submitText');
+            const submitSpinner = document.querySelector('.submit-spinner');
+            const formMessage = document.getElementById('formMessage');
+            
             // Form validation
-            const name = this.querySelector('input[placeholder="Your Name"]').value.trim();
-            const email = this.querySelector('input[placeholder="Your Email"]').value.trim();
-            const message = this.querySelector('textarea').value.trim();
+            const name = this.querySelector('input[name="name"]').value.trim();
+            const email = this.querySelector('input[name="email"]').value.trim();
+            const message = this.querySelector('textarea[name="message"]').value.trim();
             
             if (!name || !email || !message) {
-                alert('Please fill in all required fields.');
+                formMessage.textContent = 'Please fill in all required fields.';
+                formMessage.classList.remove('hidden');
+                formMessage.style.color = 'red';
                 return;
             }
             
-            // Simple email validation
             if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-                alert('Please enter a valid email address.');
+                formMessage.textContent = 'Please enter a valid email address.';
+                formMessage.classList.remove('hidden');
+                formMessage.style.color = 'red';
                 return;
             }
             
-            // Here you would typically send the data to a server
-            console.log('Form submitted:', { name, email, message });
-            alert(`Thank you, ${name}! Your message has been sent. I'll get back to you soon.`);
-            this.reset();
+            // Show loading state
+            submitText.textContent = 'Sending...';
+            submitSpinner.classList.remove('hidden');
+            submitBtn.disabled = true;
+            formMessage.classList.add('hidden');
+            
+            try {
+                const response = await fetch(this.action, {
+                    method: 'POST',
+                    body: new FormData(this),
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                if (response.ok) {
+                    formMessage.textContent = 'Message sent successfully! I will get back to you soon.';
+                    formMessage.classList.remove('hidden');
+                    formMessage.style.color = 'green';
+                    this.reset();
+                } else {
+                    throw new Error('Form submission failed');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                formMessage.textContent = 'Failed to send message. Please try again later or email me directly at abhiramsalva@gmail.com';
+                formMessage.classList.remove('hidden');
+                formMessage.style.color = 'red';
+            } finally {
+                submitText.textContent = 'Send Message';
+                submitSpinner.classList.add('hidden');
+                submitBtn.disabled = false;
+                
+                // Hide message after 5 seconds
+                setTimeout(() => {
+                    formMessage.classList.add('hidden');
+                }, 5000);
+            }
         });
     }
 
     // ===== CURRENT YEAR IN FOOTER =====
-    document.getElementById('current-year').textContent = new Date().getFullYear();
-
-    // ===== THREE.JS SETUP (OPTIONAL) =====
-    // Initialize only if Three.js is loaded and element exists
-    if (typeof THREE !== 'undefined' && document.getElementById('threejs-container')) {
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ antialias: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        document.getElementById('threejs-container').appendChild(renderer.domElement);
-        
-        const geometry = new THREE.BoxGeometry();
-        const material = new THREE.MeshNormalMaterial();
-        const cube = new THREE.Mesh(geometry, material);
-        scene.add(cube);
-        camera.position.z = 5;
-        
-        function animate() {
-            requestAnimationFrame(animate);
-            cube.rotation.x += 0.01;
-            cube.rotation.y += 0.01;
-            renderer.render(scene, camera);
-        }
-        animate();
-        
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
+    const currentYearElement = document.getElementById('current-year');
+    if (currentYearElement) {
+        currentYearElement.textContent = new Date().getFullYear();
     }
 });
 
-// ===== WINDOW LOAD EVENT FOR ADDITIONAL FUNCTIONALITY =====
+// ===== WINDOW LOAD EVENT =====
 window.addEventListener('load', function() {
     // Lazy load images
     const lazyImages = document.querySelectorAll('img[data-src]');
@@ -172,29 +182,30 @@ window.addEventListener('load', function() {
 
 // ===== CERTIFICATION IMAGE MODAL =====
 document.addEventListener('DOMContentLoaded', function() {
-    // Modal elements
     const certModal = document.getElementById('cert-modal');
     const certModalImg = document.getElementById('cert-modal-img');
     const certClose = document.getElementById('cert-close');
 
-    // Open modal on certification image click
-    document.querySelectorAll('.cert-img').forEach(img => {
-        img.style.cursor = 'pointer';
-        img.addEventListener('click', function() {
-            certModalImg.src = img.src;
-            certModal.classList.add('show');
+    if (certModal && certModalImg && certClose) {
+        document.querySelectorAll('.cert-img').forEach(img => {
+            img.style.cursor = 'pointer';
+            img.addEventListener('click', function() {
+                certModalImg.src = img.src;
+                certModal.classList.add('show');
+                document.body.style.overflow = 'hidden';
+            });
         });
-    });
 
-    // Close modal on close button or outside click
-    if (certClose) {
         certClose.addEventListener('click', function() {
             certModal.classList.remove('show');
+            document.body.style.overflow = 'auto';
         });
-    }
-    if (certModal) {
+        
         certModal.addEventListener('click', function(e) {
-            if (e.target === certModal) certModal.classList.remove('show');
+            if (e.target === certModal) {
+                certModal.classList.remove('show');
+                document.body.style.overflow = 'auto';
+            }
         });
     }
 });
